@@ -3,7 +3,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-
 module.exports.scoreHTML = (str, key) => {
     str = str.toLowerCase();
     let score = 0;
