@@ -3,7 +3,6 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 var url = "https://en.wikipedia.org/wiki/Philosophy";
-var link = '{"link":"https://en.wikipedia.org/wiki/Philosophy"}';
 
 var noIndex = "<meta name=\"robots\" content=\"noindex\"></meta>";
 
@@ -12,14 +11,18 @@ fetchData(url).then( (res) => {
     const $ = cheerio.load(html);
     var title = $("title").text();
 
-    let str = $.html();
+    let str = $.text();
 
     var today = new Date();
     var timestamp = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + ' ' + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var json = {
+        title : title,
+        link : url,
+        contents : str,
+        time : timestamp
+    };
+    writeFile(json);
 });
-
-writeFile(link);
-writeFile(content);
 
 function writeFile(data) {
     fs.writeFile ("data.json", JSON.stringify(JSON.parse(data)), function(err) {
