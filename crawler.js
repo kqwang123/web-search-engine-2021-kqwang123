@@ -27,6 +27,11 @@ async function fetchData(url) {
     const html = response.data;
     const $ = cheerio.load(html);
     var titleVar = $("title").text();
+    var firstLink = $("a");
+    firstLink.each(function() {
+        let getUrl = $(this).attr("href");
+        console.log(getUrl);
+    });
     let str = $.text();
     var today = new Date();
     var timestamp = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + ' ' + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
