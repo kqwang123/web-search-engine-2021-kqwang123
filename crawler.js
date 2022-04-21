@@ -36,10 +36,9 @@ async function fetchData(url) {
             else
                 getUrl = root+getUrl;
         }
-        //if (getUrl != undefined && getUrl.charAt(0) != "#" && urls.length < 1000)
-          //  urls.push(getUrl);
+        if (getUrl != undefined && getUrl.charAt(0) != "#" && urls.length < 1000)
+            urls.push(getUrl);
     });
-    console.log(urls);
     let str = $.text();
     if (str.includes(noIndex))
         return;
@@ -52,4 +51,9 @@ async function fetchData(url) {
         time : timestamp
     };
     writeFile(json);
+    await new Promise(r => setTimeout(r, 1000));
+}
+
+for (var i = 1; i<urls.length; i++) {
+    fetchData(url);
 }
