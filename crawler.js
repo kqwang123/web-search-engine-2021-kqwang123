@@ -1,9 +1,12 @@
 // node crawler.js to run code
 
+// imports
 var fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
+var robotsParser = require('robots-parser');
 
+// run crawler
 var root = "https://en.wikipedia.org/";
 var urls = [root];
 var json = [];
@@ -17,13 +20,20 @@ async function fetchData(index) {
         console.log("Error occurred while fetching data");
         return;
     }
+    
+    // noIndex and robots.txt
     var noIndex = "<meta name=\"robots\" content=\"noindex\"></meta>";
-    var allowed = "https://en.wikipedia.org/w/load.php?";
-    var allows = findAllows(root+"robots.txt");
+    var robots = robotsParser('http://www.wikipedia.com/robots.txt');
+    console.log(robots.isDisallowed("https://en.wikipedia.org/api/rest_v1/?doc", '*'));    
+    console.log(robots.isAllowed("https://en.wikipedia.org/w/load.php?", '*'));
+    console.log(robots.isAllowed("https://en.wikipedia.org/api/rest_v1/?doc", '*'));
+
+    // get html data
     const html = response.data;
     const $ = cheerio.load(html);
     var titleVar = $("title").text();
     var links = $("a");
+    // parses URLs
     links.each(function() {
         if (urls.length >= 10)
             return;
@@ -39,8 +49,11 @@ async function fetchData(index) {
                 urls.push(getUrl);
         }
     });
+    // noIndex
     if ($.html().includes(noIndex))
         return;
+
+    // json
     let str = $.text();
     var today = new Date();
     var timestamp = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + ' ' + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -52,19 +65,11 @@ async function fetchData(index) {
     };
     json.push(addJson);
     writeFile(json);
+
+    // new link
     await new Promise(r => setTimeout(r, 1000));
-    if (index<9)
-        fetchData(index+1);
-}
-
-function findAllows(robots) {
-
-    
-
-}
-
-function findDisallows(robots) {
-
+    //if (index<9)
+    //    fetchData(index+1);
 }
 
 function writeFile(data) {
