@@ -23,10 +23,11 @@ async function fetchData(index) {
     
     // noIndex and robots.txt
     var noIndex = "<meta name=\"robots\" content=\"noindex\"></meta>";
-    var robots = robotsParser('http://www.wikipedia.com/robots.txt');
-    console.log(robots.isDisallowed("https://en.wikipedia.org/api/rest_v1/?doc", '*'));    
-    console.log(robots.isAllowed("https://en.wikipedia.org/w/load.php?", '*'));
-    console.log(robots.isAllowed("https://en.wikipedia.org/api/rest_v1/?doc", '*'));
+    var robots = robotsParser(root+'robots.txt');
+    if (robots.isDisallowed(urls[index]) && index<1000) {
+        fetchData(index+1);
+        return;
+    }
 
     // get html data
     const html = response.data;
@@ -35,7 +36,7 @@ async function fetchData(index) {
     var links = $("a");
     // parses URLs
     links.each(function() {
-        if (urls.length >= 10)
+        if (urls.length >= 1000)
             return;
         else {
             let getUrl = $(this).attr("href");
@@ -50,11 +51,13 @@ async function fetchData(index) {
         }
     });
     // noIndex
-    if ($.html().includes(noIndex))
+    if ($.html().includes(noIndex) && index<1000) {
+        fetchData(index+1);
         return;
+    }
 
     // json
-    let str = $.text();
+    let str = $.html();
     var today = new Date();
     var timestamp = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate() + ' ' + today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var addJson = {
@@ -68,8 +71,9 @@ async function fetchData(index) {
 
     // new link
     await new Promise(r => setTimeout(r, 1000));
-    //if (index<9)
-    //    fetchData(index+1);
+    console.log(index);
+    if (index<1000)
+        fetchData(index+1);
 }
 
 function writeFile(data) {
