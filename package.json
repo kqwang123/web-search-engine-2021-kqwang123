@@ -18,7 +18,10 @@
   "homepage": "https://github.com/SLHSCS/web-search-engine-2021-kqwang123#readme",
   "dependencies": {
     "axios": "^0.26.1",
+    "body-parser": "^1.20.0",
     "cheerio": "^1.0.0-rc.10",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
     "html-to-json": "^0.6.0",
     "robots-parse": "^0.0.6",
     "robots-parser": "^3.0.0"
