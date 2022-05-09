@@ -1,11 +1,9 @@
-// setup
-const express = require('express');
-const app = express();
-const port = 3001;
+const express = require('express')
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-app.get('/', (req, res) => {
-    res.send('Hello World, from express');
-});
+const app = express();
+const port = 3000;
 
 // Where we will keep books
 let books = [];
@@ -17,7 +15,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.post('/book', (req, res) => {
-    // We will be coding here
+    const book = req.body;
+
+    // Output the book to the console for debugging
+    console.log(book);
+    books.push(book);
+
+    res.send('Book is added to the database');
 });
 
-app.listen(port, () => console.log(`Hello world app listening on port ${port}!`))
+app.get('/books', (req, res) => {
+    res.json(books);
+});
+
+app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
