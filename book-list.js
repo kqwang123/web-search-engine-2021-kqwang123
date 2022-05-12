@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 const loadBooks = () => {
     const xhttp = new XMLHttpRequest();
 
-    xhttp.open("GET", "http://localhost:3000/books", false);
+    xhttp.open("GET", "http://localhost:3001/books", false);
     xhttp.send();
 
     const books = JSON.parse(xhttp.responseText);
@@ -49,17 +49,6 @@ const loadBooks = () => {
         document.getElementById('books').innerHTML = document.getElementById('books').innerHTML + x;
     }
 }
-
-app.get('/book/:key', (req, res) => {
-    // Reading isbn from the URL
-    const key = req.params.key;
-
-    // Searching books for the isbn
-    if (key != "helloworld")
-        // Sending 404 when not found something is a good practice
-        res.status(403).send('{"error": "invalid key"}');
-    
-});
 
 app.post('/book/:isbn', (req, res) => {
     // Reading isbn from the URL
