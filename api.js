@@ -22,8 +22,23 @@ app.get('/book/:key', (req, res) => {
     
 });
 
-app.get('/books', (req, res) => {
-    res.json(books);
+const setEditModal = (s) => {
+    // Get information about the book using isbn
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.open("GET", `http://localhost:3001/frontend/${s}`, false);
+    xhttp.send();
+
+    const s = JSON.parse(xhttp.responseText);
+
+    // Setting up the action url for the book
+    document.getElementById('editForm').action = `http://localhost:3001/frontend/${isbn}`;
+}
+
+loadBooks();
+
+app.get('/frontend', (req, res) => {
+    res.json(s);
 });
 
 app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
